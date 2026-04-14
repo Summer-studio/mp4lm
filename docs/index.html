@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mp4LM</title>
+    <meta
+      name="description"
+      content="Mp4LM is a streamable, inspectable model artifact format with exact payload recovery, partial fetch support, and clean runtime integration."
+    >
+    <meta name="theme-color" content="#5dbb63">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Manrope:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="#top">
+          <span class="brand-mark">M</span>
+          <span>Mp4LM</span>
+        </a>
+        <nav class="topnav">
+          <a href="#planes">Planes</a>
+          <a href="#quickstart">Quickstart</a>
+          <a href="#notebook">Notebook</a>
+          <a href="https://github.com/Summer-studio/mp4lm.git">GitHub</a>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow">Open model artifacts, made streamable</div>
+            <h1>Exact payloads. Partial fetches. Calm runtime ergonomics.</h1>
+            <p class="hero-text">
+              Mp4LM packages model payloads into a single bundle with a readable manifest,
+              a fast binary index, and chunked regions that are friendly to HTTP range
+              requests. The format keeps canonical bytes exact while leaving room for
+              previews and future runtime hints.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="https://github.com/Summer-studio/mp4lm.git">Open Repository</a>
+              <a class="button button-secondary" href="./mp4lm_demo.ipynb">Download Demo Notebook</a>
+            </div>
+            <div class="hero-notes">
+              <span>Phase A Python reference implementation</span>
+              <span>PyTorch state_dict bridge included</span>
+              <span>GitHub Pages ready via `docs/`</span>
+            </div>
+          </div>
+
+          <aside class="hero-panel">
+            <div class="code-window">
+              <div class="code-window-bar">
+                <span></span><span></span><span></span>
+              </div>
+              <pre><code>mp4lm pack \
+  --input ./model.pt \
+  --input-format pytorch-state-dict \
+  --output ./model.mp4lm \
+  --deterministic
+
+mp4lm verify ./model.mp4lm
+
+mp4lm unpack \
+  ./model.mp4lm \
+  ./restored.pt \
+  --as pytorch-state-dict</code></pre>
+            </div>
+          </aside>
+        </section>
+
+        <section class="highlights">
+          <article class="highlight-card">
+            <h2>Exact Recovery</h2>
+            <p>Canonical tensor bytes remain byte-exact and independently checksummed.</p>
+          </article>
+          <article class="highlight-card">
+            <h2>Selective Load</h2>
+            <p>Chunk tables and offsets make it practical to fetch only what a runtime needs.</p>
+          </article>
+          <article class="highlight-card">
+            <h2>Inspectable by Design</h2>
+            <p>Human-readable manifests stay front and center instead of hiding the control plane.</p>
+          </article>
+        </section>
+
+        <section class="section" id="planes">
+          <div class="section-heading">
+            <span class="section-kicker">Three Planes</span>
+            <h2>A clean split between meaning, bytes, and presentation.</h2>
+          </div>
+          <div class="planes-grid">
+            <article class="plane-card">
+              <h3>Payload Plane</h3>
+              <p>
+                Tensors, tokenizer assets, adapters, and file artifacts live here as exact,
+                reproducible bytes.
+              </p>
+            </article>
+            <article class="plane-card">
+              <h3>Preview Plane</h3>
+              <p>
+                Optional heatmaps, frames, and summaries can be added without affecting
+                canonical reconstruction.
+              </p>
+            </article>
+            <article class="plane-card">
+              <h3>Control Plane</h3>
+              <p>
+                Header, manifest, index, checksums, and compatibility hints make range-fetch
+                loaders practical.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="quickstart">
+          <div class="section-heading">
+            <span class="section-kicker">Quickstart</span>
+            <h2>Small enough to understand, structured enough to grow.</h2>
+          </div>
+          <div class="quickstart-grid">
+            <div class="code-window">
+              <h3>Python</h3>
+              <pre><code>from mp4lm import BundleBuilder, Mp4LMBundle
+
+builder = BundleBuilder(
+    model={"name": "toy-green-demo"},
+    deterministic=True,
+)
+builder.add_tensor(
+    "layers.0.weight",
+    tensor_bytes,
+    dtype="float32",
+    shape=[2, 2],
+)
+builder.write("toy_model.mp4lm")
+
+bundle = Mp4LMBundle.open("toy_model.mp4lm")
+bundle.verify()</code></pre>
+            </div>
+            <div class="code-window">
+              <h3>PyTorch Bridge</h3>
+              <pre><code>from mp4lm import pack_pytorch_state_dict
+
+pack_pytorch_state_dict(
+    "checkpoint.pt",
+    "checkpoint.mp4lm",
+    deterministic=True,
+)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section notebook-section" id="notebook">
+          <div class="section-heading">
+            <span class="section-kicker">Notebook Demo</span>
+            <h2>Download a ready-to-run walkthrough.</h2>
+          </div>
+          <div class="notebook-card">
+            <p>
+              The demo notebook covers bundle creation, manifest inspection, checksum
+              verification, selective unpack, and an optional PyTorch round-trip.
+            </p>
+            <div class="notebook-actions">
+              <a class="button button-primary" href="./mp4lm_demo.ipynb">Get `mp4lm_demo.ipynb`</a>
+              <a class="button button-secondary" href="https://github.com/Summer-studio/mp4lm.git">Browse Source</a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>Mp4LM: model artifacts that stream like media.</p>
+      </footer>
+    </div>
+  </body>
+</html>

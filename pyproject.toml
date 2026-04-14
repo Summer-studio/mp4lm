@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mp4lm"
+version = "0.1.0"
+description = "Reference Python implementation of the Mp4LM v0.1 bundle format."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [
+  { name = "summer studio" }
+]
+dependencies = []
+
+[project.scripts]
+mp4lm = "mp4lm.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
